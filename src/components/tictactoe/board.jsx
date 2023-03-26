@@ -1,91 +1,71 @@
-import { useState } from "react";
-import Square from "./square";
-import limit from "./limitTime";
+import { useState } from "react"
+import Square from './square'
 
 const Board = ({ children }) => {
-  const [game, setGame] = useState(Array(9).fill(null));
-  const [player, setPlayer] = useState(true);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [playAgainCount, setPlayAgainCount] = useState(0);
+const [game, setGame] = useState([null, null, null, null, null, null, null, null, null])
+const [player, setPlayer] = useState(true)
+const [winner, setWinner] = useState(null)
 
-
-  const handlePlay = (position) => {
-    if (isGameOver) return;
+const handlePlay = (position) => {
+    if (winner != null) {
+        // Nếu đã có người chiến thắng, không cho phép đánh tiếp
+        return;
+    }
+    console.log(position);
     const newGame = game.map((i, index) => {
-      if (index === position) {
-        return player ? "X" : "O";
-      }
-      return i;
-    });
-    setGame(newGame);
-    setPlayer(!player);
-    const winner = checkWinner();
-    if (winner) {
-      setIsGameOver(true);
+        if(index === position) {
+            return player ? "X" : "O"
+        }
+        return i
+    })
+    setGame(newGame)
+    setPlayer(!player)
+    const newWinner = checkWinner();
+    setWinner(newWinner);
+}
+
+const winList = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+]
+
+const checkWinner = () => {
+    for(let i = 0; i < winList.length; i++) {
+        const [p1, p2, p3] = winList[i]
+        if (game[p1] === game[p2] && game[p2] === game[p3] && game[p3] === game[p1]) {
+            return game[p1]
+        }
     }
-  };
+    return null
+}
 
-  const winList = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
+const resetGame = () => {
+    setGame([null, null, null, null, null, null, null, null, null])
+    setPlayer(true)
+    setWinner(null)
+}
 
-  const checkWinner = () => {
-    for (let i = 0; i < winList.length; i++) {
-      const [p1, p2, p3] = winList[i];
-      if (game[p1] && game[p1] === game[p2] && game[p2] === game[p3]) {
-        return game[p1];
-      }
-    }
-    return null;
-  };
+return <>
+<h2>Winner is: {winner}</h2>
+<div className="grid grid-cols-3 gap-3">
+    <Square value={game[0]} position={0} handlePlay={handlePlay}/>
+    <Square value={game[1]} position={1} handlePlay={handlePlay}/>
+    <Square value={game[2]} position={2} handlePlay={handlePlay}/>
+    <Square value={game[3]} position={3} handlePlay={handlePlay}/>
+    <Square value={game[4]} position={4} handlePlay={handlePlay}/>
+    <Square value={game[5]} position={5} handlePlay={handlePlay}/>
+    <Square value={game[6]} position={6} handlePlay={handlePlay}/>
+    <Square value={game[7]} position={7} handlePlay={handlePlay}/>
+    <Square value={game[8]} position={8} handlePlay={handlePlay}/>
+</div>
+<button onClick={resetGame}>Reset</button>
+</>
+}
 
-  const handleReset = () => {
-    handlePlayAgain();
-  };
-
-  const handlePlayAgain = () => {
-    setGame(Array(9).fill(null));
-    setPlayer(true);
-    setIsGameOver(false);
-    setPlayAgainCount(playAgainCount + 1);
-  };
-
-  const squares = [];
-  for (let i = 0; i < 9; i++) {
-    squares.push(
-      <Square key={i} value={game[i]} position={i} handlePlay={handlePlay} />
-    );
-  }
-  
-
-  return (
-    <>
-      <h2>Winner is: {checkWinner()}</h2>
-      <div className="grid grid-cols-3 gap-3">{squares}</div>
-      
-      {isGameOver && (
-        <div>
-          <h3>Game Over!</h3>
-          <button onClick={handlePlayAgain}>Play Again</button>
-        </div>
-      )}
-
-      {!isGameOver && checkWinner() && (
-        <div>
-          <h3>Game Over!</h3>
-          <button onClick={handlePlayAgain}>Play Again</button>
-        </div>
-      )}
-      
-    </>
-  );
-};
-
-export default Board;
+export default Board
