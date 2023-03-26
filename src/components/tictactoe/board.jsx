@@ -42,7 +42,7 @@ const checkWinner = () => {
             return game[p1]
         }
     }
-    return null
+    return null;
 }
 
 const resetGame = () => {
