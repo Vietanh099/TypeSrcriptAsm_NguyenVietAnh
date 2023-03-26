@@ -1,0 +1,2 @@
+.game-board{border:1px solid #ccc;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);height:500px;margin:25px;width:500px}.game-cell{align-items:center;border:1px solid #ccc;cursor:pointer;display:flex;font-size:40px;font-weight:700;justify-content:center}
+/*# sourceMappingURL=main.5ebd9aca.css.map*/
